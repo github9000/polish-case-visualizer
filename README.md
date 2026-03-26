@@ -1,4 +1,4 @@
-# Polish Case Visualizer 🇵🇱
+# Polish Case Visualizer 🇵🇱 <-> 🇬🇧
 
 An AI-powered web application designed to help learners visualize Polish grammatical cases. Using Gemini 2.5 Flash, the tool color-codes text to identify inflections and provides detailed grammatical explanations on hover.
 
@@ -24,7 +24,7 @@ An AI-powered web application designed to help learners visualize Polish grammat
 
 1. **Clone the repository**:
    ```bash
-   git clone ............
+   git clone https://github.com/github9000/polish-case-visualizer
    cd polish-case-visualizer
 
 2. **Configure Environment Variables**:
@@ -33,6 +33,7 @@ An AI-powered web application designed to help learners visualize Polish grammat
    GEMINI_API_KEY=your_api_key_here   
 
 3. **Install dependencies**:
+
    Option A: Using uv (Recommended)
    If you have uv installed, this will sync your environment exactly with the uv.lock file:
    ```bash
