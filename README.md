@@ -1,15 +1,19 @@
 # Polish Case Visualizer 🇵🇱 🇬🇧
 
-An AI-powered web application designed to help learners visualize Polish grammatical cases. Using Gemini 2.5 Flash, the tool color-codes text to identify inflections and provides detailed grammatical explanations on hover.
+An AI-powered web application designed to help learners visualize Polish grammatical cases. Using Gemini 2.5 Flash, the tool colour-codes text to identify inflections and provides detailed grammatical explanations on hover.
 
 ## Features
-- **Real-time Analysis**: Color-codes all 7 Polish cases (Nominative, Genitive, Dative, Accusative, Instrumental, Locative, and Vocative).
+- **Real-time Analysis**: Colour-codes all 7 Polish cases (Nominative, Genitive, Dative, Accusative, Instrumental, Locative, and Vocative).
 - **Grammar Insights**: Provides the base nominative form and a brief explanation of the inflection (e.g., consonant shifts).
 - **Persistence**: A sidebar tracks your last 10 analyzed sentences using browser local storage.
 - **PDF Export**: Generate a clean PDF of your analyzed text for study notes.
 - **Linux Optimized**: Includes specific networking overrides to prevent gRPC/IPv6 timeout hangs on Fedora and similar distributions.
 
-## Example screenshots
+## Instructions and Example Screenshots
+1. Type some Polish text into the text box.
+1. Click the 'Analyze' button.
+1. Results show the text with nouns, pronouns and adjectives highlighted in the colour of the Polish language case they decline to. 
+
 [screenshot1.png](./screenshot1.png)
 
 [screenshot2.png](./screenshot2.png)
