@@ -18,6 +18,8 @@ An AI-powered web application designed to help learners visualize Polish grammat
 
 [screenshot2.png](./screenshot2.png)
 
+[screenshot3.png](./screenshot3.png)
+
 ## Tech Stack
 - **Backend**: Python, Flask, Google GenAI SDK.
 - **Frontend**: Vanilla JS, HTML5, CSS3.
