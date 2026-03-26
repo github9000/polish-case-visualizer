@@ -11,6 +11,7 @@ An AI-powered web application designed to help learners visualize Polish grammat
 
 ## Example screenshots
 [screenshot1.png](./screenshot1.png)
+
 [screenshot2.png](./screenshot2.png)
 
 ## Tech Stack
