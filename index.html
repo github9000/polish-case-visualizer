@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Polish Case Analyzer</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    
+    <style>
+        :root {
+            --nom: #ffcccc; /* Soft Red */
+            --gen: #ffe5cc; /* Soft Orange */
+            --dat: #ffffcc; /* Soft Yellow */
+            --acc: #ccffcc; /* Soft Green */
+            --ins: #cce5ff; /* Soft Blue */
+            --loc: #e5ccff; /* Soft Purple */
+            --voc: #b3f2ff; /* Soft Cyan */
+        }
+
+        body { font-family: 'Segoe UI', sans-serif; margin: 0; background-color: #f4f7f6; display: flex; height: 100vh; overflow: hidden; }
+        
+        /* Sidebar Styles */
+        #sidebar { width: 250px; background: #2c3e50; color: white; padding: 20px; display: flex; flex-direction: column; box-shadow: 2px 0 10px rgba(0,0,0,0.1); }
+        #sidebar h3 { font-size: 18px; border-bottom: 1px solid #34495e; padding-bottom: 10px; margin-top: 0; }
+        .history-list { list-style: none; padding: 0; overflow-y: auto; flex-grow: 1; }
+        .history-item { padding: 10px; border-radius: 5px; background: #34495e; margin-bottom: 8px; cursor: pointer; font-size: 13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; transition: 0.2s; }
+        .history-item:hover { background: #3498db; }
+
+        /* Main Layout */
+        #main-content { flex-grow: 1; padding: 40px; overflow-y: auto; display: flex; justify-content: center; }
+        .container { background: white; padding: 30px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); width: 100%; max-width: 800px; height: fit-content; }
+        
+        h1 { color: #2c3e50; text-align: center; margin: 0; }
+        .subtitle { text-align: center; color: #7f8c8d; margin-bottom: 20px; }
+        
+        textarea { width: 100%; height: 80px; padding: 12px; border: 2px solid #eee; border-radius: 10px; font-size: 16px; resize: none; box-sizing: border-box; }
+        textarea:focus { border-color: #3498db; outline: none; }
+
+        .button-group { display: flex; gap: 10px; margin: 15px 0; }
+        button { flex: 1; padding: 10px; border: none; border-radius: 8px; font-size: 13px; font-weight: bold; cursor: pointer; transition: 0.2s; text-transform: uppercase; }
+        
+        .btn-analyze { background-color: #2980b9; color: white; }
+        .btn-clear { background-color: #95a5a6; color: white; }
+        .btn-pdf { background-color: #27ae60; color: white; display: none; }
+        button:hover { opacity: 0.9; }
+
+        #output-area { padding: 20px; border: 1px solid #eee; border-radius: 10px; min-height: 50px; font-size: 18px; line-height: 2.2; margin-top: 20px; background: #fff; }
+
+        /* Tooltips */
+        .word-span { position: relative; cursor: help; padding: 2px 4px; border-radius: 4px; display: inline-block; }
+        .word-span:hover::after {
+            content: attr(data-case) " (Base: " attr(data-base) ") \A " attr(data-exp);
+            white-space: pre-wrap; position: absolute; bottom: 125%; left: 50%; transform: translateX(-50%);
+            background: #333; color: white; padding: 10px; border-radius: 5px; font-size: 11px; z-index: 10; width: 220px; text-align: center;
+        }
+
+        /* Case Colors */
+        .nom { background-color: var(--nom); } .gen { background-color: var(--gen); }
+        .dat { background-color: var(--dat); } .acc { background-color: var(--acc); }
+        .ins { background-color: var(--ins); } .loc { background-color: var(--loc); }
+        .voc { background-color: var(--voc); } .other { color: #7f8c8d; }
+
+        .legend { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 20px; border-top: 1px solid #eee; padding-top: 15px; justify-content: center; }
+        .legend-item { font-size: 9px; padding: 3px 8px; border-radius: 4px; font-weight: bold; text-transform: uppercase; color: #444; }
+    </style>
+</head>
+<body>
+
+<div id="sidebar">
+    <h3>History</h3>
+    <ul id="historyList" class="history-list"></ul>
+    <button class="btn-clear" onclick="clearHistory()" style="font-size: 10px; padding: 5px;">Clear History</button>
+</div>
+
+<div id="main-content">
+    <div class="container">
+        <h1>Polish Case Analyzer</h1>
+        <p class="subtitle">AI Grammar Visualization</p>
+
+        <textarea id="inputBox" placeholder="Enter Polish text..."></textarea>
+
+        <div class="button-group">
+            <button class="btn-analyze" onclick="analyzeText()">Analyze</button>
+            <button class="btn-clear" onclick="clearInput()">Clear</button>
+            <button class="btn-pdf" id="pdfBtn" onclick="downloadPDF()">Download PDF</button>
+        </div>
+
+        <div id="output-area">Analyzed text will appear here.</div>
+
+        <div class="legend">
+            <div class="legend-item nom">Nom</div><div class="legend-item gen">Gen</div>
+            <div class="legend-item dat">Dat</div><div class="legend-item acc">Acc</div>
+            <div class="legend-item ins">Ins</div><div class="legend-item loc">Loc</div>
+            <div class="legend-item voc">Voc</div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Load history on startup
+    window.onload = updateHistoryUI;
+
+    async function analyzeText(textOverride = null) {
+        const text = textOverride || document.getElementById('inputBox').value;
+        if (!textOverride) document.getElementById('inputBox').value = text;
+        
+        const output = document.getElementById('output-area');
+        const pdfBtn = document.getElementById('pdfBtn');
+        
+        if(!text) return;
+        output.innerHTML = "<em>Analyzing...</em>";
+
+        try {
+            const response = await fetch('/analyze', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ text: text })
+            });
+            
+            const data = await response.json();
+            if(data.error) throw new Error(data.error);
+            
+            renderData(data);
+            if (!textOverride) saveToHistory(text);
+            pdfBtn.style.display = "block";
+
+        } catch (e) {
+            output.innerHTML = `<b style='color:red;'>Error: ${e.message}</b>`;
+        }
+    }
+
+    function renderData(data) {
+        const output = document.getElementById('output-area');
+        output.innerHTML = '';
+        data.forEach(item => {
+            const span = document.createElement('span');
+            span.innerText = item.text;
+            span.className = 'word-span ' + (item.case || 'other');
+            span.setAttribute('data-case', (item.case || 'Other').toUpperCase());
+            span.setAttribute('data-base', item.base_form || 'N/A');
+            span.setAttribute('data-exp', item.explanation || '');
+            output.appendChild(span);
+        });
+    }
+
+    function saveToHistory(text) {
+        let history = JSON.parse(localStorage.getItem('polishHistory') || '[]');
+        if (!history.includes(text)) {
+            history.unshift(text);
+            if (history.length > 10) history.pop(); // Keep last 10
+            localStorage.setItem('polishHistory', JSON.stringify(history));
+            updateHistoryUI();
+        }
+    }
+
+    function updateHistoryUI() {
+        const list = document.getElementById('historyList');
+        const history = JSON.parse(localStorage.getItem('polishHistory') || '[]');
+        list.innerHTML = '';
+        history.forEach(item => {
+            const li = document.createElement('li');
+            li.className = 'history-item';
+            li.innerText = item;
+            li.onclick = () => analyzeText(item);
+            list.appendChild(li);
+        });
+    }
+
+    function clearInput() {
+        document.getElementById('inputBox').value = '';
+        document.getElementById('output-area').innerHTML = 'Analyzed text will appear here.';
+        document.getElementById('pdfBtn').style.display = 'none';
+    }
+
+    function clearHistory() {
+        localStorage.removeItem('polishHistory');
+        updateHistoryUI();
+    }
+
+    function downloadPDF() {
+        const element = document.getElementById('output-area');
+        const opt = {
+            margin: 1, filename: 'Polish_Analysis.pdf',
+            image: { type: 'jpeg', quality: 0.98 },
+            html2canvas: { scale: 2 },
+            jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
+        };
+        html2pdf().set(opt).from(element).save();
+    }
+</script>
+
+</body>
+</html>
+
