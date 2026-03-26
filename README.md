@@ -9,6 +9,10 @@ An AI-powered web application designed to help learners visualize Polish grammat
 - **PDF Export**: Generate a clean PDF of your analyzed text for study notes.
 - **Linux Optimized**: Includes specific networking overrides to prevent gRPC/IPv6 timeout hangs on Fedora and similar distributions.
 
+## Example screenshots
+[screenshot1.png](./screenshot1.png)
+[screenshot2.png](./screenshot2.png)
+
 ## Tech Stack
 - **Backend**: Python, Flask, Google GenAI SDK.
 - **Frontend**: Vanilla JS, HTML5, CSS3.
@@ -19,6 +23,8 @@ An AI-powered web application designed to help learners visualize Polish grammat
 - **index.html**: Single-page frontend with sidebar history and PDF generation.
 - **uv.lock & pyproject.toml**: Deterministic dependency tracking.
 - **requirements.txt**: Universal dependency list for pip compatibility.
+
+
 
 ## Installation & Setup
 
