@@ -1,4 +1,4 @@
-# Polish Case Visualizer 🇵🇱 <-> 🇬🇧
+# Polish Case Visualizer 🇵🇱 🇬🇧
 
 An AI-powered web application designed to help learners visualize Polish grammatical cases. Using Gemini 2.5 Flash, the tool color-codes text to identify inflections and provides detailed grammatical explanations on hover.
 
@@ -38,6 +38,7 @@ An AI-powered web application designed to help learners visualize Polish grammat
    If you have uv installed, this will sync your environment exactly with the uv.lock file:
    ```bash
    uv sync
+   ```
 
    Option B: Using standard pip
    If you prefer standard Python tools, use the generated requirements file:
