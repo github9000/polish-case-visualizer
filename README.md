@@ -69,4 +69,16 @@ An AI-powered web application designed to help learners visualize Polish grammat
 
 Access the app at http://127.0.0.1:5000
 
+## Legal Disclaimer
+This application is provided for educational and personal use only.
+
+Accuracy of Content: This app utilizes Artificial Intelligence (Google Gemini) to 
+generate language exercises. While efforts have been made to provide accurate 
+grammar instructions, AI-generated content may occasionally contain errors, inaccuracies, 
+or unnatural phrasing.
+
+No Liability: The author is not responsible for any errors in the learning material 
+or any consequences resulting from the use of this software.
+
+Data & Privacy: Users are responsible for their own API usage costs and security of 
 
