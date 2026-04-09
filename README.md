@@ -81,4 +81,5 @@ No Liability: The author is not responsible for any errors in the learning mater
 or any consequences resulting from the use of this software.
 
 Data & Privacy: Users are responsible for their own API usage costs and security of 
+their GEMINI_API_KEY. No personal data is collected or stored by this application locally.
 
